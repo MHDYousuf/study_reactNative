@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import Card from '../components/Card';
 import Input from '../components/Input';
@@ -26,8 +27,8 @@ const StartGamesScreen = props => {
 
   const confirmInputHandler = () => {
     const chosenNumber = parseInt(enteredValue);
-    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 9999) {
-      Alert.alert('Not a Valid Number', 'Enter a number between 1 and 9999', [
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      Alert.alert('Not a Valid Number', 'Enter a number between 1 and 99', [
         {text: 'Okay', style: 'destructive', onPress: resetInputHandler},
       ]);
     }
@@ -35,6 +36,24 @@ const StartGamesScreen = props => {
     setselectedNumber(chosenNumber);
     setenteredValue('');
   };
+  let confirmOutput;
+  if (confirmed) {
+    confirmOutput = (
+      <Card style={{padding: 10, marginVertical: 10}}>
+        <Text style={{textAlign: 'center'}}>You Selected:</Text>
+        <View style={styles.textSelectedContainer}>
+          <Text style={styles.textSelected}>{selectedNumber}</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.startGameSubmitted}
+          onPress={() => {
+            props.onStartGame(selectedNumber);
+          }}>
+          <Text style={styles.textinSubmitted}>Start Game</Text>
+        </TouchableOpacity>
+      </Card>
+    );
+  }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.screen}>
@@ -47,7 +66,7 @@ const StartGamesScreen = props => {
             blurOnSubmit={true}
             autoCapitalize="none"
             autoCorrect={false}
-            maxLength={4}
+            maxLength={2}
             style={styles.input}
             onChangeText={numberInputHandler}
             value={enteredValue}
@@ -65,6 +84,7 @@ const StartGamesScreen = props => {
             />
           </View>
         </Card>
+        {confirmOutput}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -93,6 +113,27 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
+  },
+  textSelectedContainer: {
+    padding: 25,
+  },
+  textSelected: {
+    textAlign: 'center',
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 7,
+    borderColor: Color.feature,
+    color: Color.feature,
+  },
+  startGameSubmitted: {
+    padding: 10,
+    backgroundColor: Color.feature,
+    borderRadius: 5,
+  },
+  textinSubmitted: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
 });
 export default StartGamesScreen;
